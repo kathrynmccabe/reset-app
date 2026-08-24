@@ -1,0 +1,9 @@
+{
+  "name": "RESET",
+  "short_name": "RESET",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7f6f1",
+  "theme_color": "#123b2a",
+  "description": "A gentle, non-judgemental everyday health and wellbeing tracker."
+}

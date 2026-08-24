@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="RESET">
+<meta name="theme-color" content="#123b2a">
+<link rel="manifest" href="manifest.json">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123b2a">
+<title>RESET — Your everyday health companion</title>
+<style>
+:root{--ink:#17231d;--muted:#6d756f;--paper:#f7f6f1;--card:#fff;--green:#123b2a;--line:#e4e2da;--accent:#dce8df}
+*{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:520px;margin:auto;padding:18px 16px 90px}.top{display:flex;justify-content:space-between;align-items:center;margin:8px 0 18px}.brand{font-size:28px;font-weight:750;letter-spacing:-1px}.date{font-size:13px;color:var(--muted)}
+.hero{background:var(--green);color:white;border-radius:24px;padding:22px;margin-bottom:14px}.hero h1{font-size:25px;margin:0 0 7px;letter-spacing:-.5px}.hero p{margin:0;color:#dfe9e2;line-height:1.45;font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px}.label{font-size:12px;color:var(--muted);margin-bottom:6px}.big{font-size:22px;font-weight:700}.row{display:flex;gap:8px;align-items:center}.pill{background:var(--accent);border-radius:999px;padding:5px 9px;font-size:12px}
+.section{margin:20px 0 10px;font-size:18px;font-weight:700}.log{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:10px}
+.loghead{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.logtitle{font-weight:650}.small{font-size:12px;color:var(--muted)}
+textarea,input,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;background:#fff;color:var(--ink);font:inherit}textarea{min-height:70px;resize:vertical}
+button{border:0;border-radius:12px;padding:10px 13px;background:var(--green);color:white;font-weight:650;cursor:pointer}.ghost{background:#eef1ed;color:var(--green)}.danger{background:#f4e8e6;color:#7c3026}
+.actions{display:flex;gap:8px;margin-top:9px}.actions button{flex:1}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}.check{display:flex;align-items:center;gap:8px;background:#f7f7f3;border-radius:12px;padding:10px;font-size:13px}.check input{width:auto}
+.bar{height:9px;background:#e9e9e2;border-radius:20px;overflow:hidden;margin:8px 0}.fill{height:100%;background:var(--green);width:0%;transition:.2s}
+.footer{position:fixed;bottom:0;left:0;right:0;background:rgba(247,246,241,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));text-align:center}
+.footer button{width:min(488px,100%)}
+.hidden{display:none}.toast{position:fixed;left:50%;bottom:75px;transform:translateX(-50%);background:#17231d;color:#fff;padding:10px 14px;border-radius:999px;font-size:13px;display:none}
+</style>
+<style>
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:0 -2px 14px;padding-bottom:2px}.tab{background:#eef1ed;color:#123b2a;white-space:nowrap}.tab.active{background:#123b2a;color:#fff}
+.recipeFilters{display:flex;gap:7px;overflow-x:auto;margin-bottom:10px}.filter{white-space:nowrap;padding:8px 11px}.activeF{background:#123b2a;color:#fff}
+.recipe{margin-top:10px}.mindButtons{display:grid;grid-template-columns:1fr 1fr;gap:8px}.response{line-height:1.5}.footer{z-index:5}
+</style></head>
+
+<body>
+<div class="app">
+  <div class="top"><div><div class="brand">RESET</div><div class="date" id="today"></div></div><div class="pill">v2</div></div>
+
+  <section class="hero">
+    <h1>Small things, consistently.</h1>
+    <p>Eat well. Move your body. Look after your head. No perfect days required.</p>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" onclick="showTab('todayTab',this)">Today</button>
+    <button class="tab" onclick="showTab('recipesTab',this)">Recipes</button>
+    <button class="tab" onclick="showTab('moveTab',this)">Move</button>
+    <button class="tab" onclick="showTab('mindTab',this)">Mindset</button>
+    <button class="tab" onclick="showTab('progressTab',this)">Progress</button>
+  </nav>
+
+  <div id="todayTab" class="tabcontent">
+    <div class="grid">
+      <div class="card"><div class="label">Steps</div><div class="big" id="stepsView">0</div><div class="small">towards 8,000</div></div>
+      <div class="card"><div class="label">Workout</div><div class="big" id="workoutView">—</div><div class="small">today</div></div>
+      <div class="card"><div class="label">Water</div><div class="big" id="waterView">0</div><div class="small">glasses</div></div>
+      <div class="card"><div class="label">Weight</div><div class="big" id="weightView">—</div><div class="small">optional</div></div>
+    </div>
+
+    <div class="section">Food</div>
+    <div class="log"><div class="loghead"><span class="logtitle">Breakfast</span></div><textarea id="breakfast" placeholder="What did you have?"></textarea></div>
+    <div class="log"><div class="loghead"><span class="logtitle">Lunch</span></div><textarea id="lunch" placeholder="What did you have?"></textarea></div>
+    <div class="log"><div class="loghead"><span class="logtitle">Dinner</span></div><textarea id="dinner" placeholder="What are you having?"></textarea></div>
+    <div class="log"><div class="loghead"><span class="logtitle">Snacks & treats</span><span class="small">Chocolate is allowed 🍫</span></div><textarea id="snacks" placeholder="Anything else?"></textarea></div>
+
+    <div class="section">Daily wins</div>
+    <div class="log"><div class="checks">
+      <label class="check"><input type="checkbox" id="protein"> Protein with meals</label>
+      <label class="check"><input type="checkbox" id="veg"> Fruit/veg</label>
+      <label class="check"><input type="checkbox" id="move"> Moved my body</label>
+      <label class="check"><input type="checkbox" id="mind"> Looked after mindset</label>
+    </div></div>
+  </div>
+
+  <div id="recipesTab" class="tabcontent hidden">
+    <div class="section">What do you fancy?</div>
+    <div class="recipeFilters">
+      <button class="ghost filter activeF" onclick="filterRecipes('all',this)">All</button>
+      <button class="ghost filter" onclick="filterRecipes('breakfast',this)">Breakfast</button>
+      <button class="ghost filter" onclick="filterRecipes('lunch',this)">Lunch</button>
+      <button class="ghost filter" onclick="filterRecipes('dinner',this)">Dinner</button>
+      <button class="ghost filter" onclick="filterRecipes('snack',this)">Snacks</button>
+    </div>
+    <input id="recipeSearch" placeholder="Search recipes…" oninput="renderRecipes()">
+    <div id="recipeList"></div>
+    <div class="log" style="margin-top:12px">
+      <div class="loghead"><span class="logtitle">Use what I have</span></div>
+      <textarea id="ingredients" placeholder="e.g. salmon, spinach, tomatoes, Philadelphia"></textarea>
+      <button onclick="suggestMeal()" style="margin-top:8px">Find an idea</button>
+      <div id="mealSuggestion" class="small" style="margin-top:9px"></div>
+    </div>
+  </div>
+
+  <div id="moveTab" class="tabcontent hidden">
+    <div class="section">Movement</div>
+    <div class="log"><div class="loghead"><span class="logtitle">Steps</span><span class="small">8,000 is a useful guide, not a pass/fail test</span></div>
+      <input id="steps" type="number" min="0" placeholder="e.g. 8500"><div class="bar"><div class="fill" id="stepBar"></div></div>
+    </div>
+    <div class="log"><div class="loghead"><span class="logtitle">Today's workout</span></div><input id="workout" placeholder="e.g. 30 min strength"></div>
+    <div class="log"><div class="loghead"><span class="logtitle">Water</span></div><input id="water" type="number" min="0" max="30" placeholder="Glasses"></div>
+    <div class="section">Your RESET rhythm</div>
+    <div class="log"><p style="margin:0;line-height:1.5">Aim for <b>3 strength sessions</b> across the week, regular walking and plenty of normal-life movement. Rest days count too.</p></div>
+  </div>
+
+  <div id="mindTab" class="tabcontent hidden">
+    <div class="section">How are you feeling?</div>
+    <div class="log">
+      <select id="mood"><option value="">Choose one…</option><option>Great</option><option>Good</option><option>Okay</option><option>Low</option><option>Stressed</option><option>Hungry</option><option>Overwhelmed</option></select>
+      <div style="height:9px"></div><textarea id="note" placeholder="Anything worth noticing today?"></textarea>
+    </div>
+    <div class="section">I need help with…</div>
+    <div class="mindButtons">
+      <button class="ghost" onclick="mindset('chocolate')">I want chocolate 🍫</button>
+      <button class="ghost" onclick="mindset('overeaten')">I've overeaten</button>
+      <button class="ghost" onclick="mindset('motivation')">I can't be bothered</button>
+      <button class="ghost" onclick="mindset('body')">I'm feeling rubbish about my body</button>
+    </div>
+    <div id="mindResponse" class="log response">Pick one above — RESET will help you with the next step, not punish you for the last one.</div>
+  </div>
+
+  <div id="progressTab" class="tabcontent hidden">
+    <div class="section">Progress, not perfection</div>
+    <div class="log"><div class="label">Current weight (optional)</div><input id="weight" type="number" step="0.1" min="0" placeholder="kg"></div>
+    <div class="grid">
+      <div class="card"><div class="label">Habits checked</div><div class="big" id="habitScore">0/4</div></div>
+      <div class="card"><div class="label">Days logged</div><div class="big" id="daysLogged">0</div></div>
+    </div>
+    <div class="log"><b>This week's focus</b><p id="weeklyFocus" style="line-height:1.5;margin-bottom:0">Consistency beats a perfect Monday.</p></div>
+  </div>
+
+  <div class="actions"><button onclick="saveDay()">Save today</button><button class="ghost" onclick="resetForm()">Clear today</button></div>
+</div>
+<div class="footer"><button onclick="saveDay()">Save today's RESET</button></div>
+<div class="toast" id="toast">Saved ✓</div>
+<script>
+const recipes=[
+["banana-skyr-smoothie","Banana, oat & Skyr smoothie","breakfast","5 min","Blend banana, Skyr/Greek yoghurt, oats, chia, almond/oat milk and a little pistachio crème."],
+["skyr-bowl","Pistachio Skyr bowl","breakfast","3 min","Skyr, banana or berries, oats/chia and a small spoon of pistachio crème."],
+["lemon-courgette-pasta","Lemon courgette & tomato pasta","dinner","20 min","Linguine with courgettes, tomatoes, lemon and light Philadelphia; finish with Parmesan."],
+["salmon-sweet-potato","Salmon & sweet potato tray bake","dinner","30 min","Roast sweet potato and vegetables, then add salmon for the final part of cooking."],
+["prawn-orzo","Garlic prawn & tomato orzo","dinner","20 min","Tomatoes, garlic, spinach and prawns with orzo; finish with lemon."],
+["veggie-chilli","Easy veggie chilli","dinner","30 min","Beans, tomatoes, sweetcorn and spices. Serve with rice, yoghurt or avocado."],
+["feta-wrap","Greek-style feta & falafel wrap","lunch","10 min","Wrap with feta, falafel, tomato, cucumber, leaves and yoghurt dressing."],
+["smoked-salmon-toast","Smoked salmon & cream cheese toast","lunch","5 min","Toast with cream cheese, smoked salmon, lemon and leaves."],
+["yoghurt-snack","Greek yoghurt, fruit & chocolate","snack","2 min","Greek yoghurt with fruit plus a little chocolate. A snack, not a failure."],
+["sweet-potato-fries","Air-fryer sweet potato fries","snack","20 min","Slice sweet potato, season and air fry until crisp. Serve with yoghurt dip."]
+];
+let recipeFilter="all";
+const ids=["breakfast","lunch","dinner","snacks","protein","veg","move","mind","steps","workout","water","mood","note","weight"];
+const key="reset-"+new Date().toISOString().slice(0,10);
+document.getElementById("today").textContent=new Date().toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+function showTab(id,btn){document.querySelectorAll(".tabcontent").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));btn.classList.add("active");}
+function filterRecipes(f,b){recipeFilter=f;document.querySelectorAll(".filter").forEach(x=>x.classList.remove("activeF"));b.classList.add("activeF");renderRecipes();}
+function renderRecipes(){const q=(document.getElementById("recipeSearch").value||"").toLowerCase();const list=document.getElementById("recipeList");list.innerHTML="";
+recipes.filter(r=>(recipeFilter==="all"||r[2]===recipeFilter)&&(r[1]+" "+r[4]).toLowerCase().includes(q)).forEach(r=>{
+const d=document.createElement("div");d.className="recipe log";d.innerHTML=`<div class="loghead"><span class="logtitle">${r[1]}</span><span class="pill">${r[3]}</span></div><div class="small">${r[4]}</div><button class="ghost" style="margin-top:9px" onclick="useRecipe('${r[0]}')">Add to today's food</button>`;list.appendChild(d);
+});}
+function useRecipe(id){const r=recipes.find(x=>x[0]===id);const field=r[2]==="breakfast"?"breakfast":r[2]==="lunch"?"lunch":r[2]==="dinner"?"dinner":"snacks";document.getElementById(field).value=(document.getElementById(field).value?document.getElementById(field).value+"; ":"")+r[1];showTab("todayTab",document.querySelector(".tab"));update();}
+function suggestMeal(){const s=(document.getElementById("ingredients").value||"").toLowerCase();const r=recipes.find(x=>x[4].toLowerCase().split(/\W+/).some(w=>w.length>3&&s.includes(w)));document.getElementById("mealSuggestion").textContent=r?"Try: "+r[1]+" — "+r[4]:"Try a salmon, prawn, pasta or veggie recipe from the library, or add a couple more ingredients.";}
+function mindset(t){const m={chocolate:"Have the chocolate. Sit down, enjoy it, and carry on with your normal meals. You don't need to earn it or compensate for it.",overeaten:"One meal doesn't need fixing. Have your next normal meal, drink some water, and don't skip food to make up for it.",motivation:"Do the smallest useful thing: a 10-minute walk, a shower, or a simple meal. Momentum can come after action.",body:"Your body is not a problem to solve today. Put on something comfortable, eat normally, and do one thing that makes you feel looked after."};document.getElementById("mindResponse").textContent=m[t];}
+function load(){const d=JSON.parse(localStorage.getItem(key)||"{}");ids.forEach(id=>{const e=document.getElementById(id);if(e&&d[id]!==undefined)e.type==="checkbox"?e.checked=d[id]:e.value=d[id]});update();renderRecipes();}
+function saveDay(){const d={};ids.forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.type==="checkbox"?e.checked:e.value});localStorage.setItem(key,JSON.stringify(d));update();const t=document.getElementById("toast");t.style.display="block";setTimeout(()=>t.style.display="none",1200);}
+function update(){const s=Number(document.getElementById("steps").value||0);document.getElementById("stepsView").textContent=s.toLocaleString();document.getElementById("stepBar").style.width=Math.min(100,s/80)+"%";document.getElementById("workoutView").textContent=document.getElementById("workout").value||"—";document.getElementById("waterView").textContent=document.getElementById("water").value||0;document.getElementById("weightView").textContent=document.getElementById("weight").value?document.getElementById("weight").value+" kg":"—";const hs=["protein","veg","move","mind"].filter(x=>document.getElementById(x).checked).length;document.getElementById("habitScore").textContent=hs+"/4";document.getElementById("daysLogged").textContent=localStorage.length;}
+function resetForm(){if(confirm("Clear today's entries?")){localStorage.removeItem(key);location.reload()}}
+document.querySelectorAll("input,textarea,select").forEach(e=>e.addEventListener("input",update));
+load();
+</script>
+</body>
